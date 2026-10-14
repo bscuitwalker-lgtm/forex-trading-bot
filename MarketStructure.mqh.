@@ -1,0 +1,67 @@
+#ifndef MARKET_STRUCTURE_MQH
+#define MARKET_STRUCTURE_MQH
+
+enum StructureTrend
+{
+   STRUCTURE_BEARISH = -1,
+   STRUCTURE_UNKNOWN = 0,
+   STRUCTURE_BULLISH = 1
+};
+
+class CMarketStructure
+{
+public:
+   // Basic swing-high detection.
+   bool IsSwingHigh(string symbol,
+                    ENUM_TIMEFRAMES timeframe,
+                    int shift,
+                    int strength = 2)
+   {
+      if(shift < strength + 1 || strength < 1)
+         return false;
+
+      double center = iHigh(symbol, timeframe, shift);
+
+      if(center <= 0.0)
+         return false;
+
+      for(int i = 1; i <= strength; i++)
+      {
+         if(iHigh(symbol, timeframe, shift - i) >= center)
+            return false;
+
+         if(iHigh(symbol, timeframe, shift + i) > center)
+            return false;
+      }
+
+      return true;
+   }
+
+   // Basic swing-low detection.
+   bool IsSwingLow(string symbol,
+                   ENUM_TIMEFRAMES timeframe,
+                   int shift,
+                   int strength = 2)
+   {
+      if(shift < strength + 1 || strength < 1)
+         return false;
+
+      double center = iLow(symbol, timeframe, shift);
+
+      if(center <= 0.0)
+         return false;
+
+      for(int i = 1; i <= strength; i++)
+      {
+         if(iLow(symbol, timeframe, shift - i) <= center)
+            return false;
+
+         if(iLow(symbol, timeframe, shift + i) < center)
+            return false;
+      }
+
+      return true;
+   }
+};
+
+#endif
