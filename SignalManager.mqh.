@@ -1,0 +1,40 @@
+
+#ifndef SIGNAL_MANAGER_MQH
+#define SIGNAL_MANAGER_MQH
+
+#include "TrendStrategy.mqh"
+#include "MomentumStrategy.mqh"
+
+enum TradeSignal
+{
+   SIGNAL_SELL = -1,
+   SIGNAL_NONE = 0,
+   SIGNAL_BUY = 1
+};
+
+class CSignalManager
+{
+public:
+   TradeSignal GetSignal(
+      TrendDirection trend,
+      MomentumDirection momentum)
+   {
+      // Only agree when both modules point the same way.
+      if(trend == TREND_BULLISH &&
+         momentum == MOMENTUM_BULLISH)
+      {
+         return SIGNAL_BUY;
+      }
+
+      if(trend == TREND_BEARISH &&
+         momentum == MOMENTUM_BEARISH)
+      {
+         return SIGNAL_SELL;
+      }
+
+      // Conflicting or neutral readings: no signal.
+      return SIGNAL_NONE;
+   }
+};
+
+#endif
