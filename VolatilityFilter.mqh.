@@ -1,0 +1,83 @@
+
+#ifndef VOLATILITY_FILTER_MQH
+#define VOLATILITY_FILTER_MQH
+
+class CVolatilityFilter
+{
+private:
+   int atrHandle;
+
+public:
+   CVolatilityFilter()
+   {
+      atrHandle = INVALID_HANDLE;
+   }
+
+   bool Init(string symbol,
+             ENUM_TIMEFRAMES timeframe,
+             int atrPeriod = 14)
+   {
+      if(atrHandle != INVALID_HANDLE)
+         IndicatorRelease(atrHandle);
+
+      atrHandle = iATR(
+         symbol,
+         timeframe,
+         atrPeriod
+      );
+
+      return (atrHandle != INVALID_HANDLE);
+   }
+
+   // ATR is returned in price units, not pips.
+   double GetATR()
+   {
+      if(atrHandle == INVALID_HANDLE)
+         return 0.0;
+
+      double values[1];
+
+      // Read the last completed candle.
+      if(CopyBuffer(
+         atrHandle, 0, 1, 1, values
+      ) != 1)
+      {
+         return 0.0;
+      }
+
+      if(values[0] <= 0.0)
+         return 0.0;
+
+      return values[0];
+   }
+
+   bool IsVolatilityAllowed(
+      double minimumATR,
+      double maximumATR)
+   {
+      if(minimumATR < 0.0 ||
+         maximumATR <= minimumATR)
+      {
+         return false;
+      }
+
+      double atr = GetATR();
+
+      if(atr <= 0.0)
+         return false;
+
+      return (atr >= minimumATR &&
+              atr <= maximumATR);
+   }
+
+   void Release()
+   {
+      if(atrHandle != INVALID_HANDLE)
+      {
+         IndicatorRelease(atrHandle);
+         atrHandle = INVALID_HANDLE;
+      }
+   }
+};
+
+#endif
