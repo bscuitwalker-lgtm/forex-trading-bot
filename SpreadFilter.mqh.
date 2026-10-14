@@ -1,0 +1,42 @@
+
+#ifndef SPREAD_FILTER_MQH
+#define SPREAD_FILTER_MQH
+
+class CSpreadFilter
+{
+public:
+   // Checks whether the current spread is acceptable.
+   // maxSpreadPoints is measured in broker points.
+   bool IsSpreadAllowed(string symbol,
+                        double maxSpreadPoints)
+   {
+      if(maxSpreadPoints <= 0.0)
+         return false;
+
+      MqlTick tick;
+
+      if(!SymbolInfoTick(symbol, tick))
+         return false;
+
+      if(tick.ask <= 0.0 || tick.bid <= 0.0)
+         return false;
+
+      if(tick.ask < tick.bid)
+         return false;
+
+      double point = SymbolInfoDouble(
+         symbol,
+         SYMBOL_POINT
+      );
+
+      if(point <= 0.0)
+         return false;
+
+      double spreadPoints =
+         (tick.ask - tick.bid) / point;
+
+      return (spreadPoints <= maxSpreadPoints);
+   }
+};
+
+#endif
