@@ -1,0 +1,26 @@
+
+# Forex Trading Bot
+
+An automated, multi-strategy Forex Expert Advisor for MetaTrader 5.
+
+## Objectives
+- Analyse multiple timeframes.
+- Identify trend and market structure.
+- Evaluate liquidity sweeps, BOS, MSS, FVGs and order blocks.
+- Use EMA, MACD, RSI and ATR indicators.
+- Analyse price action, support and resistance.
+- Support scalping and swing-trading configurations.
+- Execute and manage trades automatically through MT5.
+- Include position sizing, stop-loss, take-profit and daily risk limits.
+- Support historical backtesting and demo testing.
+
+## Development Stages
+1. Define strategy rules.
+2. Build modular MQL5 components.
+3. Implement risk management.
+4. Integrate automated execution.
+5. Backtest historical data.
+6. Validate in an MT5 demo environment.
+
+## Safety
+Live trading remains disabled during development and testing.
