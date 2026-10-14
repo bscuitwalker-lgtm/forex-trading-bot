@@ -1,0 +1,42 @@
+
+#ifndef CANDLE_MANAGER_MQH
+#define CANDLE_MANAGER_MQH
+
+class CCandleManager
+{
+private:
+   datetime lastCandleTime;
+
+public:
+   CCandleManager()
+   {
+      lastCandleTime = 0;
+   }
+
+   // Returns true only when a new candle is detected.
+   bool IsNewCandle(string symbol,
+                    ENUM_TIMEFRAMES timeframe)
+   {
+      datetime currentTime[1];
+
+      if(CopyTime(symbol, timeframe, 0, 1,
+                  currentTime) != 1)
+      {
+         return false;
+      }
+
+      if(currentTime[0] == lastCandleTime)
+         return false;
+
+      lastCandleTime = currentTime[0];
+
+      return true;
+   }
+
+   void Reset()
+   {
+      lastCandleTime = 0;
+   }
+};
+
+#endif
